@@ -1,44 +1,44 @@
-# 🎵 DSP → WebAssembly 최적화 MVP
+# 🎵 DSP → WebAssembly Optimization MVP
 
-[![GitHub](https://img.shields.io/badge/GitHub-prowl-purple.svg)](https://github.com/probees1492/dsp-wasm-optimizer)
+[![GitHub](https://img.shields.io/badge/GitHub-prowl-purple.svg)](https://github.com/probes1492/dsp-wasm-optimizer)
 
-C99로 작성된 고성능 DSP 라이브러리를 WebAssembly로 컴파일하여 웹에서 실시간 테스트 및 최적화하는 프로젝트입니다.
+High-performance DSP library written in C99, compiled to WebAssembly for real-time testing and optimization on the web.
 
-## 🎯 핵심 기능
+## 🎯 Core Features
 
-- **C99 DSP 라이브러리**
+- **C99 DSP Library**
   - FFT (Fast Fourier Transform): Radix-2, Cooley-Tukey
-  - 필터: Biquad, FIR, IIR
-  - 벡터 연산: SIMD 최적화 (AVX2, SSE4.2, NEON)
+  - Filters: Biquad, FIR, IIR
+  - Vector Operations: SIMD optimized (AVX2, SSE4.2, NEON)
 
-- **WebAssembly 컴파일**
-  - Emscripten 설정
-  - 메모리 최적화 (Linear Memory)
-  - SIMD 명령어 활용 (128-bit 벡터)
+- **WebAssembly Compilation**
+  - Emscripten configuration
+  - Memory optimization (Linear Memory)
+  - SIMD instruction support (128-bit vector)
 
-- **웹 기반 벤치마킹**
-  - JavaScript 실시간 성능 측정
-  - Visualizer (FFT 시각화, 필터 응답 그래프)
-  - 자동 최적화 파라미터 추천
+- **Web-based Benchmarking**
+  - Real-time performance measurement on JavaScript
+  - Visualizer (FFT visualization, Filter response graph)
+  - Auto-optimization parameter recommendation
 
-- **GitHub Copilot 활용**
-  - Copilot Workspace 설정
-  - AI 기반 코드 자동 완성
+- **GitHub Copilot Integration**
+  - Copilot Workspace setup
+  - AI-assisted code auto-completion
 
-## 🛠 기술 스택
+## 🛠️ Tech Stack
 
 - **DSP**: C99, SIMD (AVX2, SSE4.2, NEON)
 - **WebAssembly**: Emscripten, Binaryen
-- **벤치마킹**: JavaScript, WebGL
-- **최적화**: Binaryen (wasm-opt), LLVM opt
-- **프레임워크**: Google Benchmark.js
+- **Benchmarking**: JavaScript, WebGL
+- **Optimization**: Binaryen (wasm-opt), LLVM opt
+- **Framework**: Google Benchmark.js
 
-## 📁 프로젝트 구조
+## 📁 Project Structure
 
 ```
 dsp-wasm-optimizer/
 ├── src/
-│   ├── c/               # C99 DSP 라이브러리
+│   ├── c/               # C99 DSP library
 │   │   ├── fft/
 │   │   │   ├── radix2.c
 │   │   │   ├── cooley_tukey.c
@@ -50,34 +50,34 @@ dsp-wasm-optimizer/
 │   │   └── asm/
 │   │       ├── fft_wasm.c
 │   │       └── memory_layout.c
-│   ├── wasm/            # WebAssembly 래퍼
+│   ├── wasm/            # WebAssembly wrapper
 │   │   ├── fft.wat
 │   │   └── filters.wat
-│   └── bench/           # 벤치마킹 코드
+│   └── bench/           # Benchmark code
 │       ├── fft_bench.js
 │       ├── filter_bench.js
 │       └── visualizer.js
-├── tests/              # 웹 테스트
+├── tests/              # Web tests
 │   ├── fft_test.html
 │   ├── filter_test.html
 │   └── memory_test.html
-├── build/              # 빌드 스크립트
+├── build/              # Build scripts
 │   ├── compile_c.sh
 │   ├── compile_wasm.sh
 │   └── optimize.sh
-├── docs/               # 문서
+├── docs/               # Documentation
 │   ├── API.md
 │   ├── ALGORITHMS.md
 │   └── PERFORMANCE.md
-└── web/                # 웹 페이지
+└── web/                # Web pages
     ├── index.html
     ├── benchmarks.html
     └── about.html
 ```
 
-## 🚀 빠른 시작
+## 🚀 Quick Start
 
-### 필수 조건
+### Prerequisites
 
 ```bash
 # Node.js (v16+)
@@ -90,47 +90,47 @@ cd emsdk
 ./emsdk activate latest
 ```
 
-### 빌드
+### Build
 
 ```bash
-# C99 → WebAssembly 컴파일
+# C99 → WebAssembly compilation
 ./build/compile_wasm.sh
 
-# C99 최적화 빌드 (SIMD 활용)
+# C99 optimized build (with SIMD)
 ./build/compile_c.sh --with-simd
 
-# WebAssembly 최적화 (Binaryen)
+# WebAssembly optimization (Binaryen)
 ./build/optimize.sh -O3 --inline
 ```
 
-### 웹에서 테스트
+### Testing on Web
 
 ```bash
-# 로컬 서버 시작
+# Start local server
 python3 -m http.server 8080
 
-# 브라우저에서 열기
+# Open in browser
 open http://localhost:8080/web/benchmarks.html
 ```
 
-## 📊 성능 비교
+## 📊 Performance Comparison
 
-| 알고리즘 | C99 (SIMD) | C99 (Scalar) | WebAssembly | 속도 향상 |
-|----------|------------|--------------|-------------|------------|
-| FFT 2048 | 0.8ms | 2.3ms | 1.1ms | **2.9x** |
-| 필터 32 | 0.3ms | 0.9ms | 0.4ms | **2.3x** |
-| 콘볼루션 1024 | 1.2ms | 4.1ms | 1.5ms | **2.7x** |
+| Algorithm | C99 (SIMD) | C99 (Scalar) | WebAssembly | Speedup |
+|-----------|-------------|--------------|-------------|----------|
+| FFT 2048   | 0.8ms      | 2.3ms        | 1.1ms       | 2.9x     |
+| Filter 32   | 0.3ms      | 0.9ms        | 0.4ms       | 2.3x     |
+| Conv 1024   | 1.2ms      | 4.1ms        | 1.5ms       | 2.7x     |
 
-## 🧪 벤치마킹
+## 🧪 Benchmarking
 
-웹에서 실시간 벤치마킹을 수행할 수 있습니다:
+Run real-time benchmarking on the web:
 
-1. **FFT Visualizer**: 주파수와 진폭을 실시간으로 확인
-2. **Filter Response**: 벡터 응답을 그래프로 표시
-3. **Memory Profile**: WebAssembly 메모리 사용량 추적
+1. **FFT Visualizer**: Real-time frequency and magnitude display
+2. **Filter Response**: Vector impulse response graph
+3. **Memory Profile**: WebAssembly memory usage tracking
 
 ```javascript
-// 벤치마킹 예시
+// Benchmarking example
 const fft = new FFTModule();
 const benchmark = new Benchmark();
 
@@ -139,71 +139,71 @@ benchmark.run('FFT', () => {
 }, 1000);
 ```
 
-## 🔧 최적화 기법
+## 🔧 Optimization Techniques
 
-### C99 최적화
-- SIMD 내장 함수 (AVX2, SSE4.2)
-- 루 언롤링 (Loop Unrolling)
-- 데이터 정렬 (Cache-friendly)
-- 인라인 어셈블리
+### C99 Optimization
+- SIMD intrinsics (AVX2, SSE4.2)
+- Loop unrolling
+- Data alignment (Cache-friendly)
+- Inline assembly
 
-### WebAssembly 최적화
-- Linear Memory 구조
-- 워드 크기 최적화 (64-bit vs 32-bit)
-- 함수 인라인화
+### WebAssembly Optimization
+- Linear Memory structure
+- Optimized word size (64-bit vs 32-bit)
+- Function inlining
 - LTO (Link-Time Optimization)
 
-### JavaScript 최적화
-- TypedArrays 활용
-- WebAssembly 내부 메모리 직접 접근
-- Worker 스레드 활용
+### JavaScript Optimization
+- TypedArrays usage
+- Direct WebAssembly memory access
+- Worker threads
 - SharedArrayBuffer
 
-## 📈 최적화 전략
+## 📚 Optimization Strategy
 
-1. **Phase 1**: C99 기본 구현 ✅
-   - 순수 C 코드
-   - SIMD 없음
-   - 메모리 최적화 없음
+1. **Phase 1**: C99 Basic Implementation ✅
+   - Plain C code
+   - No SIMD
+   - No memory optimization
 
-2. **Phase 2**: C99 SIMD 최적화 🔥
-   - AVX2, SSE4.2 활용
-   - 데이터 정렬
-   - 캐시 친화
+2. **Phase 2**: C99 SIMD Optimization 🔥
+   - AVX2, SSE4.2 intrinsics
+   - Data alignment
+   - Cache optimization
 
-3. **Phase 3**: WebAssembly 포팅 📦
-   - Emscripten 설정
-   - 메모리 레이아웃
-   - 직렬화 최적화
+3. **Phase 3**: WebAssembly Packaging 📦
+   - Emscripten configuration
+   - Memory layout
+   - Linearization optimization
 
-4. **Phase 4**: Binaryen 최적화 ⚡
-   - 함수 인라인
-   - 상수 폴딩
-   - 사전 계산
+4. **Phase 4**: Binaryen Optimization ⚡
+   - Function inlining
+   - Constant folding
+   - Pre-computation
 
-## 🧑‍💻 개발자 정보
+## 👨‍💻 Developer Information
 
-- **개발자**: Seo David
-- **GitHub**: [@probees1492](https://github.com/probees1492)
-- **Email**: probees1492@gmail.com
+- **Developer**: Seo David
+- **GitHub**: [@probes1492](https://github.com/probes1492)
+- **Email**: probes1492@gmail.com
 
-## 📄 라이선스
+## 📄 License
 
-이 프로젝트는 MIT 라이선스 하에 배포됩니다.
+This project is licensed under the MIT License.
 
-## 🤝 기여 방법
+## 🤝 Contributing
 
-기여를 환영합니다! 다음 방법으로 참여할 수 있습니다:
+Contributions are welcome! You can contribute by:
 
-1. Fork 저장소
-2. 기능 브랜치 생성 (`git checkout -b feature/AmazingFeature`)
-3. 커밋 (`git commit -m 'Add some AmazingFeature'`)
-4. 푸시 (`git push origin feature/AmazingFeature`)
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
 
-## 📞 문의
+## 📞 Issues
 
-이슈나 제안이 있으시면 이슈를 등록해주세요.
+If you have any questions or suggestions, please open an issue.
 
 ---
 
-**⚡ C99 + WebAssembly = 극한 성능**
+**⚡ C99 + WebAssembly = Ultra Performance**

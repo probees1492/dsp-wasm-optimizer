@@ -1,22 +1,22 @@
 #!/bin/bash
 
-# C99 → WebAssembly 컴파일 스크립트
-# Emscripten 사용
+# C99 → WebAssembly Build Script
+# Uses Emscripten to compile C99 DSP library to WebAssembly
 
 set -e
 
-echo "🔧 C99 → WebAssembly 컴파일 도구"
+echo "🔧 C99 → WebAssembly Build Script"
 
-# 경로 설정
+# Path configuration
 SRC_DIR="src/c"
 WASM_DIR="src/wasm"
 BUILD_DIR="build"
 EMSDK_DIR="/var/services/homes/seo/.openclaw/workspace/emsdk"
 
-# Emscripten 경로 체크
+# Check if Emscripten is installed
 if [ ! -d "$EMSDK_DIR" ]; then
-    echo "❌ Emscripten이 설치되어 있지 않습니다."
-    echo "설치 방법:"
+    echo "❌ Emscripten is not installed."
+    echo "Install method:"
     echo "  git clone https://github.com/emscripten-core/emsdk.git $EMSDK_DIR"
     echo "  cd $EMSDK_DIR"
     echo "  ./emsdk install latest"
@@ -24,83 +24,83 @@ if [ ! -d "$EMSDK_DIR" ]; then
     exit 1
 fi
 
-# 활성화
+# Activate Emscripten
 source "$EMSDK_DIR/emsdk_env.sh"
 
-echo "✅ Emscripten 경로 설정 완료"
+echo "✅ Emscripten path configured"
 echo "   EMSDK: $EMSDK_DIR"
 echo "   EMCC: $(which emcc)"
 
-# WebAssembly 설정
+# WebAssembly compilation flags
 EMCC_FLAGS=(
     "-s USE_SDL=0"
     "-s USE_SDL_AUDIO=0"
-    "-O3"  # 최적화 레벨
+    "-O3"  # Optimization level 3 (highest)
     "-s ALLOW_MEMORY_GROWTH=1"
     "-s MODULARIZE=1"
     "-s EXPORT_NAME=\"FFTModule\""
     "-s EXPORTED_FUNCTIONS='[\"_malloc\", \"_free\", \"_fft_radix2\"]'"
     "-s WASM=1"
-    "-msimd128"
-    "--memory-init 8192"
+    "-msimd128"  # Enable 128-bit SIMD (SIMD128)
+    "--memory-init 8192"  # Initialize with 8KB memory
 )
 
-# C99 소스 파일들
+# C99 source files
 C_SOURCES=(
     "$SRC_DIR/fft/fft_radix2.c"
     "$SRC_DIR/filters/biquad_fir.c"
 )
 
 echo ""
-echo "🚀 WebAssembly 컴파일 시작..."
-echo "   소스 파일: ${C_SOURCES[@]}"
+echo "🚀 WebAssembly Compilation Started..."
+echo "   Source files: ${C_SOURCES[@]}"
 
-# C99 → WebAssembly 컴파일
+# Compile C99 → WebAssembly
 emcc "${EMCC_FLAGS[@]}" \
     -I "$SRC_DIR/.." \
     "${C_SOURCES[@]}" \
     -o "$BUILD_DIR/fft.js"
 
 if [ $? -eq 0 ]; then
-    echo "✅ 컴파일 성공!"
-    echo "   출력: $BUILD_DIR/fft.js"
+    echo "✅ Compilation Successful!"
+    echo "   Output: $BUILD_DIR/fft.js"
     
-    # WebAssembly 파일 크기
+    # WebAssembly file size
     WASM_SIZE=$(stat -f%s "$BUILD_DIR/fft.wasm" 2>/dev/null || echo "N/A")
-    echo "   크기: ${WASM_SIZE} bytes"
+    echo "   Size: ${WASM_SIZE} bytes"
 else
-    echo "❌ 컴파일 실패!"
+    echo "❌ Compilation Failed!"
     exit 1
 fi
 
 echo ""
-echo "📊 추가 최적화..."
+echo "📊 Additional Optimization..."
 
-# Binaryen으로 최적화 (선택 사항)
+# Binaryen optimization (optional)
 if command -v wasm-opt >/dev/null 2>&1; then
-    echo "🔧 Binaryen 최적화 중..."
+    echo "🔧 Binaryen Optimization..."
     wasm-opt -O3 "$BUILD_DIR/fft.wasm" -o "$BUILD_DIR/fft_optimized.wasm"
     
     if [ $? -eq 0 ]; then
-        echo "✅ Binaryen 최적화 완료!"
-        echo "   출력: $BUILD_DIR/fft_optimized.wasm"
+        echo "✅ Binaryen Optimization Complete!"
+        echo "   Output: $BUILD_DIR/fft_optimized.wasm"
     else
-        echo "⚠️  Binaryen 최적화 실패 (무시됨)"
+        echo "⚠️  Binaryen Optimization Failed (will be ignored)"
     fi
 else
-    echo "⚠️  wasm-opt가 설치되어 있지 않습니다 (무시됨)"
+    echo "⚠️  wasm-opt not installed (optimization skipped)"
 fi
 
 echo ""
-echo "📋 빌드 파일 정보:"
+echo "📋 Build Files:"
 echo "   JavaScript: $BUILD_DIR/fft.js"
 echo "   WebAssembly: $BUILD_DIR/fft.wasm"
-echo "   Binaryen: $BUILD_DIR/fft_optimized.wasm (선택사항)"
+echo "   Binaryen: $BUILD_DIR/fft_optimized.wasm (optional)"
 
 echo ""
-echo "🎯 웹에서 테스트 방법:"
+echo "🎯 Testing on Web:"
 echo "   python3 -m http.server 8080"
-echo "   브라우저에서 file://$PWD/web/benchmarks.html 열기"
+echo "   Open in browser: file://$PWD/web/benchmarks.html"
 
 echo ""
-echo "✅ 컴파일 완료!"
+echo "✅ Build Complete!"
