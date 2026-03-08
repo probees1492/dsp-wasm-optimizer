@@ -1,0 +1,32 @@
+# Binaries
+*.wasm
+*.js
+
+# Build artifacts
+build/
+docs/
+html/
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Emscripten
+emsdk/
+.emscripten
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

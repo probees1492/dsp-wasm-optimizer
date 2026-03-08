@@ -1,0 +1,15 @@
+[FEAT] Add GitHub Pages deployment and fix root path
+
+- Move web/index.html to repository root for GitHub Pages
+- Add GitHub Actions workflow for automatic deployment
+- Add .gitignore for build artifacts and dependencies
+- Update README with deployment instructions
+
+Changes:
+- web/index.html → index.html (moved to root)
+- .github/workflows/deploy.yml (GitHub Actions workflow)
+- .gitignore (exclude build artifacts, dependencies)
+
+Deployment:
+- GitHub Actions automatically builds and deploys to gh-pages
+- Demo URL: https://probes1492.github.io/dsp-wasm-optimizer/

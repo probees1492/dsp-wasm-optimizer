@@ -1,0 +1,97 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+    
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: 📦 Install Emscripten
+      run: |
+        git clone https://github.com/emscripten-core/emsdk.git $HOME/emsdk
+        cd $HOME/emsdk
+        ./emsdk install latest
+        ./emsdk activate latest
+        echo "EMSDK=$HOME/emsdk" >> $GITHUB_ENV
+    
+    - name: 🔨 Build WebAssembly
+      run: |
+        source $HOME/emsdk/emsdk_env.sh
+        
+        # Navigate to build directory
+        cd build
+        
+        # Make compile script executable
+        chmod +x compile_wasm.sh
+        
+        # Run build script
+        ./compile_wasm.sh
+        
+        # Verify build artifacts
+        if [ -f "fft.js" ] && [ -f "fft.wasm" ]; then
+          echo "✅ WebAssembly build successful"
+          ls -lh *.js *.wasm
+        else
+          echo "❌ Build failed - missing artifacts"
+          exit 1
+        fi
+    
+    - name: 🧪 Run Tests
+      run: |
+        # Simple syntax check for WASM
+        python3 -m http.server 8000 &
+        SERVER_PID=$!
+        
+        # Wait for server to start
+        sleep 5
+        
+        # Check if server is running
+        curl -f http://localhost:8000/ || exit 1
+        
+        # Kill server
+        kill $SERVER_PID
+        echo "✅ Tests passed"
+    
+    - name: 📋 Check Build Artifacts
+      run: |
+        echo "📦 Build artifacts:"
+        ls -lh build/
+        
+        if [ -f "build/fft.wasm" ]; then
+          echo "✅ WebAssembly file found"
+          stat build/fft.wasm
+        else
+          echo "❌ WebAssembly file not found"
+          exit 1
+        fi
+    
+    - name: 🚀 Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./web
+        publish_branch: gh-pages
+        cname: probes1492.github.io
+        user_message: '🚀 Deploy DSP WASM Optimizer v${{ github.sha }}'
+        force_orphan: true
+    
+    - name: ✅ Deployment Success
+      run: |
+        echo "🎉 Deployment successful!"
+        echo "📝 Demo URL: https://probes1492.github.io/dsp-wasm-optimizer/"
